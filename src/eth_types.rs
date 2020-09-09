@@ -314,6 +314,14 @@ pub fn my_keccak256(data: &[u8]) -> [u8; 32] {
     buffer
 }
 
+/// my_keccak256
+pub fn my_keccak512(data: &[u8]) -> [u8; 64] {
+    let mut buffer = [0u8; 64];
+    use sha3::Digest;
+    buffer.copy_from_slice(sha3::Keccak512::digest(&data).as_slice());
+    buffer
+}
+
 /// hash256
 pub fn hash256(data: &[u8]) -> [u8; 32] {
     let mut buffer = [0u8; 32];
