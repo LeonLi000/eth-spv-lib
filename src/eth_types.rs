@@ -10,6 +10,7 @@ use rlp::{
     RlpStream,
 };
 use rlp_derive::{RlpDecodable as RlpDecodableDerive, RlpEncodable as RlpEncodableDerive};
+use sha2::Sha256;
 
 macro_rules! arr_declare_wrapper_and_serde {
     ($name: ident, $len: expr) => {
@@ -307,5 +308,13 @@ pub fn my_keccak256(data: &[u8]) -> [u8; 32] {
     let mut buffer = [0u8; 32];
     use sha3::Digest;
     buffer.copy_from_slice(sha3::Keccak256::digest(&data).as_slice());
+    buffer
+}
+
+/// hash256
+pub fn hash256(data: &[u8]) -> [u8; 32] {
+    let mut buffer = [0u8; 32];
+    use sha2::Digest;
+    buffer.copy_from_slice(sha2::Sha256::digest(&data).as_slice());
     buffer
 }
