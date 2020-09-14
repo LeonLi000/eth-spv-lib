@@ -244,19 +244,18 @@ impl RlpDecodable for BlockHeader {
             extra_data: serialized.val_at(12)?,
             mix_hash: serialized.val_at(13)?,
             nonce: serialized.val_at(14)?,
-            // hash: Some(my_keccak256(serialized.as_raw()).into()),
-            hash: None,
+            hash: Some(my_keccak256(serialized.as_raw()).into()),
             partial_hash: None,
         };
 
-        // block_header.partial_hash = Some(
-        //     my_keccak256({
-        //         let mut stream = RlpStream::new();
-        //         block_header.stream_rlp(&mut stream, true);
-        //         stream.out().as_slice()
-        //     })
-        //     .into(),
-        // );
+        block_header.partial_hash = Some(
+            my_keccak256({
+                let mut stream = RlpStream::new();
+                block_header.stream_rlp(&mut stream, true);
+                stream.out().as_slice()
+            })
+            .into(),
+        );
 
         Ok(block_header)
     }
