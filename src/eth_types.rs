@@ -101,40 +101,6 @@ macro_rules! uint_declare_wrapper_and_serde {
         ///
         pub struct $name(pub ethereum_types::$name);
 
-        impl From<&[u8; $len]> for $name {
-            fn from(item: &[u8; $len]) -> Self {
-                $name(item.into())
-            }
-        }
-
-        impl From<[u8; $len]> for $name {
-            fn from(item: [u8; $len]) -> Self {
-                (&item).into()
-            }
-        }
-
-        impl From<&Vec<u8>> for $name {
-            fn from(item: &Vec<u8>) -> Self {
-                let mut data = [0u8; $len];
-                for i in 0..item.len() {
-                    data[$len - 1 - i] = item[item.len() - 1 - i];
-                }
-                $name(data.into())
-            }
-        }
-
-        impl From<Vec<u8>> for $name {
-            fn from(item: Vec<u8>) -> Self {
-                (&item).into()
-            }
-        }
-
-        impl From<&[u8]> for $name {
-            fn from(item: &[u8]) -> Self {
-                item.to_vec().into()
-            }
-        }
-
         impl RlpEncodable for $name {
             fn rlp_append(&self, s: &mut RlpStream) {
                 <ethereum_types::$name>::rlp_append(&self.0, s);
