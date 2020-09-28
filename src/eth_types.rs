@@ -101,26 +101,39 @@ macro_rules! uint_declare_wrapper_and_serde {
         ///
         pub struct $name(pub ethereum_types::$name);
 
-        // impl BorshSerialize for $name {
-        //     #[inline]
-        //     fn serialize<W: Write>(&self, writer: &mut W) -> Result<(), Error> {
-        //         for i in 0..$len {
-        //             BorshSerialize::serialize(&(self.0).0[i], writer)?;
-        //         }
-        //         Ok(())
-        //     }
-        // }
+        impl From<&[u8; $len]> for $name {
+            fn from(item: &[u8; $len]) -> Self {
+                $name(item.into())
+            }
+        }
 
-        // impl BorshDeserialize for $name {
-        //     #[inline]
-        //     fn deserialize(buf: &mut &[u8]) -> Result<Self, Error> {
-        //         let mut data = [0u64; $len];
-        //         for i in 0..$len {
-        //             data[i] = borsh::de::BorshDeserialize::deserialize(buf)?;
-        //         }
-        //         Ok($name(ethereum_types::$name(data)))
-        //     }
-        // }
+        impl From<[u8; $len]> for $name {
+            fn from(item: [u8; $len]) -> Self {
+                (&item).into()
+            }
+        }
+
+        impl From<&Vec<u8>> for $name {
+            fn from(item: &Vec<u8>) -> Self {
+                let mut data = [0u8; $len];
+                for i in 0..item.len() {
+                    data[$len - 1 - i] = item[item.len() - 1 - i];
+                }
+                $name(data.into())
+            }
+        }
+
+        impl From<Vec<u8>> for $name {
+            fn from(item: Vec<u8>) -> Self {
+                (&item).into()
+            }
+        }
+
+        impl From<&[u8]> for $name {
+            fn from(item: &[u8]) -> Self {
+                item.to_vec().into()
+            }
+        }
 
         impl RlpEncodable for $name {
             fn rlp_append(&self, s: &mut RlpStream) {

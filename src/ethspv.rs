@@ -6,42 +6,27 @@ use rlp::Rlp;
 // https://doc.rust-lang.org/alloc/index.html
 use alloc::{vec, vec::Vec};
 
-///
+/// verify the log entry is valid.
 pub fn verify_log_entry(
     log_index: u64,
     log_entry_data: Vec<u8>,
     receipt_index: u64,
     receipt_data: Vec<u8>,
-    // header_data: Vec<u8>,
-    // block_number: u64,
-    // block_hash: Vec<u8>,
     receipts_root: H256,
     proof: Vec<Vec<u8>>,
 ) -> bool {
     let log_entry: LogEntry = rlp::decode(log_entry_data.as_slice()).unwrap();
     let receipt: Receipt = rlp::decode(receipt_data.as_slice()).unwrap();
-    // let header: BlockHeader = rlp::decode(header_data.as_slice()).unwrap();
-
-    // Verify log_entry included in receipt
+    // Verify log_entry included in receipt.
     assert_eq!(receipt.logs[log_index as usize], log_entry);
-
-    // Verify receipt included into header
-    let verification_result = verify_trie_proof(
+    // Verify the trie proof is valid.
+    verify_trie_proof(
         receipts_root,
         rlp::encode(&receipt_index),
         proof,
         receipt_data,
-    );
-    return verification_result;
-
-    //FIXME: Verify block header from client. Move to toCKB.
-    // return verify_from_client(header.number, header.hash);
+    )
 }
-
-///
-// pub fn verify_from_client(block_number: u64, block_hash: Option<H256>) -> bool {
-//     return true;
-// }
 
 /// Iterate the proof following the key.
 /// Return True if the value at the leaf is equal to the expected value.
