@@ -13,10 +13,3 @@ pub mod eth_types;
 /// `ethspv` provides higher-levels of abstraction for evaluating SPV proofs.
 pub mod ethspv;
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
-}

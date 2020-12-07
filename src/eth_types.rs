@@ -223,12 +223,12 @@ impl RlpDecodable for BlockHeader {
             extra_data: serialized.val_at(12)?,
             mix_hash: serialized.val_at(13)?,
             nonce: serialized.val_at(14)?,
-            hash: Some(my_keccak256(serialized.as_raw()).into()),
+            hash: Some(keccak256(serialized.as_raw()).into()),
             partial_hash: None,
         };
 
         block_header.partial_hash = Some(
-            my_keccak256({
+            keccak256({
                 let mut stream = RlpStream::new();
                 block_header.stream_rlp(&mut stream, true);
                 stream.out().as_slice()
@@ -284,16 +284,16 @@ pub struct Receipt {
     pub logs: Vec<LogEntry>,
 }
 
-/// my_keccak256
-pub fn my_keccak256(data: &[u8]) -> [u8; 32] {
+/// keccak256
+pub fn keccak256(data: &[u8]) -> [u8; 32] {
     let mut buffer = [0u8; 32];
     use sha3::Digest;
     buffer.copy_from_slice(sha3::Keccak256::digest(&data).as_slice());
     buffer
 }
 
-/// my_keccak256
-pub fn my_keccak512(data: &[u8]) -> [u8; 64] {
+/// keccak512
+pub fn keccak512(data: &[u8]) -> [u8; 64] {
     let mut buffer = [0u8; 64];
     use sha3::Digest;
     buffer.copy_from_slice(sha3::Keccak512::digest(&data).as_slice());

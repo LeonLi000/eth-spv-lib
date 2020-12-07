@@ -75,12 +75,12 @@ fn _verify_trie_proof(
 
     if key_index == 0 {
         // trie root is always a hash
-        assert_eq!(my_keccak256(node), (expected_root.0).0);
+        assert_eq!(keccak256(node), (expected_root.0).0);
     } else if node.len() < 32 {
         // if rlp < 32 bytes, then it is not hashed
         assert_eq!(dec.as_raw(), (expected_root.0).0);
     } else {
-        assert_eq!(my_keccak256(node), (expected_root.0).0);
+        assert_eq!(keccak256(node), (expected_root.0).0);
     }
 
     if dec.iter().count() == 17 {
